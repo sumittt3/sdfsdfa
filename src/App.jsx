@@ -236,7 +236,7 @@ const playAudio = () => {
       )}
      {!audioPlayed && (
         <div
-          className="fixed bottom-8 sm:bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-6 py-2 rounded-full cursor-pointer"
+          className="fixed bottom-14 w-32 sm:bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-6 py-2 rounded-full cursor-pointer"
           onClick={playAudio}
         >
           Play Welcome Audio
