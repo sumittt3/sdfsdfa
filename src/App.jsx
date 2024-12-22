@@ -70,12 +70,12 @@ const apiKey =  import.meta.env.VITE_API_GENERATIVE_LANGUAGE_CLIENT;
 
     if (listening) {
       SpeechRecognition.stopListening();
-      setIsMicOn(false);
+      setIsMicOn(true);
     } else {
       setIsStarting(true);
       resetTranscript();
       SpeechRecognition.startListening({continuous: true});
-        setIsMicOn(true);
+        setIsMicOn(false);
     }
     setIsListening(!listening);
   };
