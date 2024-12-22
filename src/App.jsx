@@ -28,10 +28,16 @@ const apiKey =  import.meta.env.VITE_API_GENERATIVE_LANGUAGE_CLIENT;
     setIsSupported(isSpeechRecognitionAvailable);
 
     // Function to play audio when screen is clicked for the first time, except on mic click
-      
+      const simulateUserGesture = () => {
         const audio = new Audio("/audio.mp3"); // Path to your audio file
         audio.play();
+}
+     window.addEventListener("load", simulateUserGesture);
 
+    // Cleanup after the effect
+    return () => {
+      window.removeEventListener("load", simulateUserGesture);
+    };
 
   }, []); // Empty dependency array ensures this runs only once
 
