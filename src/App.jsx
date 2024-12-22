@@ -7,6 +7,7 @@ import SpeechRecognition, {
 import axios from "axios";
 function App() {
   const [isListening, setIsListening] = useState(false);
+  const [isMicOn, setIsMicOn] = useState(false);
   const [isStarting, setIsStarting] = useState(false); // Track if speech is starting
   const [isSupported, setIsSupported] = useState(true); // Track if speech recognition is supported
   const [microphonePermission, setMicrophonePermission] = useState(false); // Track microphone access
@@ -30,7 +31,7 @@ const apiKey =  import.meta.env.VITE_API_GENERATIVE_LANGUAGE_CLIENT;
     // Function to play audio when screen is clicked for the first time, except on mic click
     const handleClick = (event) => {
       // Check if the click target is not the microphone button
-      if (!event.target.closest(".mic-button")) {
+      if (!event.target.closest(".mic-button") && !isMicOn) {
         const audio = new Audio("/audio.mp3"); // Path to your audio file
         audio.play();
 
@@ -69,10 +70,12 @@ const apiKey =  import.meta.env.VITE_API_GENERATIVE_LANGUAGE_CLIENT;
 
     if (listening) {
       SpeechRecognition.stopListening();
+      setIsMicOn(false);
     } else {
       setIsStarting(true);
       resetTranscript();
       SpeechRecognition.startListening({continuous: true});
+        setIsMicOn(true);
     }
     setIsListening(!listening);
   };
