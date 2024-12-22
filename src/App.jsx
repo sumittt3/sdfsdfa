@@ -196,7 +196,7 @@ function App() {
     <div className="relative flex flex-col justify-center items-center min-h-screen bg-gray-900 text-gray-100 overflow-hidden">
       <div className="absolute inset-0">
         <video
-          src="../public/video.mp4"
+          src="../video.mp4"
           autoPlay
           loop
           muted
