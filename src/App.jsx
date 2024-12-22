@@ -7,6 +7,7 @@ import SpeechRecognition, {
 import axios from "axios";
 function App() {
   const [isListening, setIsListening] = useState(false);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [audioPlayed, setAudioPlayed] = useState(false);
   const [isStarting, setIsStarting] = useState(false); // Track if speech is starting
   const [isSupported, setIsSupported] = useState(true); // Track if speech recognition is supported
@@ -29,15 +30,34 @@ const apiKey =  import.meta.env.VITE_API_GENERATIVE_LANGUAGE_CLIENT;
     setIsSupported(isSpeechRecognitionAvailable);
 
   }, []); 
-  const playAudio = () => {
+const playAudio = () => {
+    // Don't play the audio if it's already played or currently playing
+    if (audioPlayed || isAudioPlaying) {
+      console.log("Audio is either already played or is currently playing.");
+      return;
+    }
+
     const audio = new Audio("/audio.mp3");
-    audio.play().then(() => {
-      console.log("Audio played successfully.");
-      setAudioPlayed(true);
-    }).catch((error) => {
-      console.error("Error playing audio:", error);
-    });
+    
+    // Set the isAudioPlaying to true when the audio starts playing
+    setIsAudioPlaying(true);
+    
+    audio.play()
+      .then(() => {
+        console.log("Audio played successfully.");
+        setAudioPlayed(true); // Set audioPlayed to true after it plays
+      })
+      .catch((error) => {
+        console.error("Error playing audio:", error);
+      })
+      .finally(() => {
+        // Set isAudioPlaying to false when audio finishes playing
+        audio.onended = () => {
+          setIsAudioPlaying(false);
+        };
+      });
   };
+
   const checkMicrophonePermission = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({audio: true});
@@ -214,7 +234,7 @@ const apiKey =  import.meta.env.VITE_API_GENERATIVE_LANGUAGE_CLIENT;
           <p>Speech recognition is not supported on this device or browser.</p>
         </div>
       )}
-      {listening === false && (
+     {!audioPlayed && (
         <div
           className="fixed bottom-8 sm:bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-6 py-2 rounded-full cursor-pointer"
           onClick={playAudio}
@@ -222,19 +242,22 @@ const apiKey =  import.meta.env.VITE_API_GENERATIVE_LANGUAGE_CLIENT;
           Play Welcome Audio
         </div>
       )}
-      <div className="fixed bottom-20 sm:bottom-16 flex justify-center w-full z-10">
-        <button
-          onClick={toggleListening}
-          className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center bg-gray-400 rounded-full shadow-2xl transition-all duration-300 mic-button"
-        >
-          <img
-            src={listening ? micIconOn : micIconOff}
-            alt={listening ? "Open Mic" : "Mic Off"}
-            className="w-12 h-12 sm:w-14 sm:h-14"
-          />
-        </button>
-      </div>
 
+      {/* Conditionally render the Mic button only after audio is played */}
+      {audioPlayed && (
+        <div className="fixed bottom-20 sm:bottom-16 flex justify-center w-full z-10">
+          <button
+            onClick={toggleListening}
+            className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center bg-gray-400 rounded-full shadow-2xl transition-all duration-300 mic-button"
+          >
+            <img
+              src={listening ? micIconOn : micIconOff}
+              alt={listening ? "Open Mic" : "Mic Off"}
+              className="w-12 h-12 sm:w-14 sm:h-14"
+            />
+          </button>
+        </div>
+      )}
       <div className="absolute bottom-12 sm:bottom-4 text-white opacity-70 text-xs sm:text-sm z-10">
         <p>&copy; 2024 Vani Vox. All Rights Reserved.</p>
       </div>
