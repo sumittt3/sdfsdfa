@@ -236,14 +236,12 @@ const playAudio = () => {
       )}
     {!audioPlayed && (
   <div
-    className="fixed bottom-14 sm:bottom:40 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-8 py-4 rounded-full cursor-pointer flex justify-center items-center text-center"
+    className="fixed bottom-14 w-64 sm:bottom:40 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-8 py-4 rounded-full cursor-pointer flex justify-center items-center text-center"
     onClick={playAudio}
   >
     Play Welcome Audio
   </div>
 )}
-
-
       {/* Conditionally render the Mic button only after audio is played */}
       {audioPlayed && (
         <div className="fixed bottom-20 sm:bottom-16 flex justify-center w-full z-10">
