@@ -7,6 +7,7 @@ import SpeechRecognition, {
 import axios from "axios";
 function App() {
   const [isListening, setIsListening] = useState(false);
+  const [audioPlayed, setAudioPlayed] = useState(false);
   const [isStarting, setIsStarting] = useState(false); // Track if speech is starting
   const [isSupported, setIsSupported] = useState(true); // Track if speech recognition is supported
   const [microphonePermission, setMicrophonePermission] = useState(false); // Track microphone access
@@ -27,19 +28,26 @@ const apiKey =  import.meta.env.VITE_API_GENERATIVE_LANGUAGE_CLIENT;
       "SpeechRecognition" in window || "webkitSpeechRecognition" in window;
     setIsSupported(isSpeechRecognitionAvailable);
 
-    // Function to play audio when screen is clicked for the first time, except on mic click
-      const simulateUserGesture = () => {
+    const simulateUserGesture = () => {
+      if (!audioPlayed) {
         const audio = new Audio("/audio.mp3"); // Path to your audio file
-        audio.play();
-}
-     window.addEventListener("load", simulateUserGesture);
+        audio.play().then(() => {
+          console.log("Audio played successfully.");
+          setAudioPlayed(true); // Mark audio as played
+        }).catch(error => {
+          console.error("Error playing audio:", error);
+        });
+      }
+    };
+
+    // Simulate a user click interaction on load to avoid autoplay restriction
+    window.addEventListener("load", simulateUserGesture);
 
     // Cleanup after the effect
     return () => {
       window.removeEventListener("load", simulateUserGesture);
     };
-
-  }, []); // Empty dependency array ensures this runs only once
+  }, [audioPlayed]); // Ensure this runs only once
 
   const checkMicrophonePermission = async () => {
     try {
