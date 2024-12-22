@@ -27,28 +27,43 @@ const apiKey =  import.meta.env.VITE_API_GENERATIVE_LANGUAGE_CLIENT;
     const isSpeechRecognitionAvailable =
       "SpeechRecognition" in window || "webkitSpeechRecognition" in window;
     setIsSupported(isSpeechRecognitionAvailable);
-const handleAudioPlayDecision = () => {
-      // Ask the user if they want to play the audio
-      const userResponse = window.confirm("Do you want to play the audio?");
-      
-      // If the user clicks "OK" (audio ON), play the audio
-      if (userResponse) {
-        const audio = new Audio("/audio.mp3"); // Path to your audio file
-        audio.play()
-          .then(() => {
-            console.log("Audio played successfully.");
-          })
-          .catch((error) => {
-            console.error("Error playing audio:", error);
-          });
-      } else {
-        console.log("User chose not to play audio.");
-      }
+    const simulateUserGesture = () => {
+      const audio = new Audio("/audio.mp3"); // Path to your audio file
+      audio.play().then(() => {
+        console.log("Audio played successfully.");
+        setAudioPlayed(true); // Mark audio as played
+      }).catch(error => {
+        console.error("Error playing audio:", error);
+      });
     };
 
-    // Call the function when the page loads
-    handleAudioPlayDecision();
-     }, []); 
+    // Provide a hint to users with a small button to allow interaction
+    const showPlayPrompt = () => {
+      const promptElement = document.createElement("div");
+      promptElement.innerHTML = `
+        <div style="position: absolute; bottom: 20px; left: 20px; padding: 10px; background: #000; color: white; border-radius: 5px; font-size: 14px;">
+          Click here to enable audio
+        </div>
+      `;
+      promptElement.style.cursor = "pointer";
+      document.body.appendChild(promptElement);
+
+      // When the user clicks the prompt, play the audio
+      promptElement.addEventListener("click", () => {
+        simulateUserGesture();
+        document.body.removeChild(promptElement); // Remove prompt after user interaction
+      });
+    };
+
+    // Call the function that shows the prompt to users
+    showPlayPrompt();
+
+    // Cleanup any event listeners if component unmounts
+    return () => {
+      document.body.removeChild(document.querySelector('div[style*="position: absolute"]')); // Remove prompt if necessary
+    };
+
+  }, []); 
   
   const checkMicrophonePermission = async () => {
     try {
