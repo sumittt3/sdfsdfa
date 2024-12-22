@@ -234,14 +234,15 @@ const playAudio = () => {
           <p>Speech recognition is not supported on this device or browser.</p>
         </div>
       )}
-     {!audioPlayed && (
-        <div
-          className="fixed bottom-14 w-64 sm:bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-6 py-2 rounded-full cursor-pointer"
-          onClick={playAudio}
-        >
-          Play Welcome Audio
-        </div>
-      )}
+    {!audioPlayed && (
+  <div
+    className="fixed bottom-14 sm:bottom:40 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-8 py-4 rounded-full cursor-pointer flex justify-center items-center text-center"
+    onClick={playAudio}
+  >
+    Play Welcome Audio
+  </div>
+)}
+
 
       {/* Conditionally render the Mic button only after audio is played */}
       {audioPlayed && (
