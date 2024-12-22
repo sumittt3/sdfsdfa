@@ -28,22 +28,11 @@ const apiKey =  import.meta.env.VITE_API_GENERATIVE_LANGUAGE_CLIENT;
     setIsSupported(isSpeechRecognitionAvailable);
 
     // Function to play audio when screen is clicked for the first time, except on mic click
-    const handleClick = (event) => {
       
         const audio = new Audio("/audio.mp3"); // Path to your audio file
         audio.play();
 
-        // Remove the event listener after the first click to play audio once
-        window.removeEventListener("click", handleClick);
-    };
 
-    // Add event listener for the first click on the screen
-    window.addEventListener("click", handleClick);
-
-    // Cleanup event listener on component unmount
-    return () => {
-      window.removeEventListener("click", handleClick);
-    };
   }, []); // Empty dependency array ensures this runs only once
 
   const checkMicrophonePermission = async () => {
