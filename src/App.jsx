@@ -27,44 +27,17 @@ const apiKey =  import.meta.env.VITE_API_GENERATIVE_LANGUAGE_CLIENT;
     const isSpeechRecognitionAvailable =
       "SpeechRecognition" in window || "webkitSpeechRecognition" in window;
     setIsSupported(isSpeechRecognitionAvailable);
-    const simulateUserGesture = () => {
-      const audio = new Audio("/audio.mp3"); // Path to your audio file
-      audio.play().then(() => {
-        console.log("Audio played successfully.");
-        setAudioPlayed(true); // Mark audio as played
-      }).catch(error => {
-        console.error("Error playing audio:", error);
-      });
-    };
-
-    // Provide a hint to users with a small button to allow interaction
-    const showPlayPrompt = () => {
-      const promptElement = document.createElement("div");
-      promptElement.innerHTML = `
-        <div style="position: absolute; bottom: 20px; left: 20px; padding: 10px; background: #000; color: white; border-radius: 5px; font-size: 14px;">
-          Click here to enable audio
-        </div>
-      `;
-      promptElement.style.cursor = "pointer";
-      document.body.appendChild(promptElement);
-
-      // When the user clicks the prompt, play the audio
-      promptElement.addEventListener("click", () => {
-        simulateUserGesture();
-        document.body.removeChild(promptElement); // Remove prompt after user interaction
-      });
-    };
-
-    // Call the function that shows the prompt to users
-    showPlayPrompt();
-
-    // Cleanup any event listeners if component unmounts
-    return () => {
-      document.body.removeChild(document.querySelector('div[style*="position: absolute"]')); // Remove prompt if necessary
-    };
 
   }, []); 
-  
+  const playAudio = () => {
+    const audio = new Audio("/audio.mp3");
+    audio.play().then(() => {
+      console.log("Audio played successfully.");
+      setAudioPlayed(true);
+    }).catch((error) => {
+      console.error("Error playing audio:", error);
+    });
+  };
   const checkMicrophonePermission = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({audio: true});
@@ -241,7 +214,14 @@ const apiKey =  import.meta.env.VITE_API_GENERATIVE_LANGUAGE_CLIENT;
           <p>Speech recognition is not supported on this device or browser.</p>
         </div>
       )}
-
+      {listening === false && (
+        <div
+          className="fixed bottom-8 sm:bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-6 py-2 rounded-full cursor-pointer"
+          onClick={playAudio}
+        >
+          Play Welcome Audio
+        </div>
+      )}
       <div className="fixed bottom-20 sm:bottom-16 flex justify-center w-full z-10">
         <button
           onClick={toggleListening}
