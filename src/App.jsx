@@ -29,25 +29,42 @@ const apiKey =  import.meta.env.VITE_API_GENERATIVE_LANGUAGE_CLIENT;
     setIsSupported(isSpeechRecognitionAvailable);
 
     const simulateUserGesture = () => {
-      if (!audioPlayed) {
-        const audio = new Audio("/audio.mp3"); // Path to your audio file
-        audio.play().then(() => {
-          console.log("Audio played successfully.");
-          setAudioPlayed(true); // Mark audio as played
-        }).catch(error => {
-          console.error("Error playing audio:", error);
-        });
-      }
+      const audio = new Audio("/audio.mp3"); // Path to your audio file
+      audio.play().then(() => {
+        console.log("Audio played successfully.");
+        setAudioPlayed(true); // Mark audio as played
+      }).catch(error => {
+        console.error("Error playing audio:", error);
+      });
     };
 
-    // Simulate a user click interaction on load to avoid autoplay restriction
-    window.addEventListener("load", simulateUserGesture);
+    // Provide a hint to users with a small button to allow interaction
+    const showPlayPrompt = () => {
+      const promptElement = document.createElement("div");
+      promptElement.innerHTML = `
+        <div style="position: absolute; bottom: 20px; left: 20px; padding: 10px; background: #000; color: white; border-radius: 5px; font-size: 14px;">
+          Click here to enable audio
+        </div>
+      `;
+      promptElement.style.cursor = "pointer";
+      document.body.appendChild(promptElement);
 
-    // Cleanup after the effect
+      // When the user clicks the prompt, play the audio
+      promptElement.addEventListener("click", () => {
+        simulateUserGesture();
+        document.body.removeChild(promptElement); // Remove prompt after user interaction
+      });
+    };
+
+    // Call the function that shows the prompt to users
+    showPlayPrompt();
+
+    // Cleanup any event listeners if component unmounts
     return () => {
-      window.removeEventListener("load", simulateUserGesture);
+      document.body.removeChild(document.querySelector('div[style*="position: absolute"]')); // Remove prompt if necessary
     };
-  }, [audioPlayed]); // Ensure this runs only once
+
+  }, []);
 
   const checkMicrophonePermission = async () => {
     try {
