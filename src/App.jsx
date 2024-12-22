@@ -164,7 +164,7 @@ function App() {
       // Send a POST request directly to the Gemini API
       const response = await axios({
         url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${
-          VITE_API_GENERATIVE_LANGUAGE_CLIENT
+          import.meta.env.VITE_API_GENERATIVE_LANGUAGE_CLIENT
         }`,
         method: "post",
         data: {
