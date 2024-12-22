@@ -13,7 +13,7 @@ function App() {
   const [isListeningForPhrase, setIsListeningForPhrase] = useState(true); // Start by listening for trigger phrase
   const [canSendData, setCanSendData] = useState(false); // Control data sending
   const [inactivityTimer, setInactivityTimer] = useState(null); // Track inactivity timer
-
+const apiKey =  import.meta.env.VITE_API_GENERATIVE_LANGUAGE_CLIENT;
   const micIconOn =
     "https://fonts.gstatic.com/s/i/materialicons/mic/v6/24px.svg";
   const micIconOff =
@@ -164,7 +164,7 @@ function App() {
       // Send a POST request directly to the Gemini API
       const response = await axios({
         url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${
-          import.meta.env.VITE_API_GENERATIVE_LANGUAGE_CLIENT
+          apikey
         }`,
         method: "post",
         data: {
