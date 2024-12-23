@@ -138,6 +138,7 @@ const playAudio = () => {
       setIsListeningForPhrase(false);
       setCanSendData(true); // Enable data sending
       SpeechRecognition.startListening({continuous: true});
+      window.speechSynthesis.cancel();
     }
 
     if (transcript && canSendData) {
@@ -186,6 +187,7 @@ const playAudio = () => {
       console.log(AiResponse);
       function speakText(text) {
         if ("speechSynthesis" in window) {
+          window.speechSynthesis.cancel();
           const utterance = new SpeechSynthesisUtterance(text);
           utterance.lang = "en-US"; // Set the language to English
           window.speechSynthesis.speak(utterance); // Speak the text
