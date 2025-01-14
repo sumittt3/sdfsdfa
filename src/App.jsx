@@ -31,32 +31,30 @@ const apiKey =  import.meta.env.VITE_API_GENERATIVE_LANGUAGE_CLIENT;
 
   }, []); 
 const playAudio = () => {
-    // Don't play the audio if it's already played or currently playing
-    if (audioPlayed || isAudioPlaying) {
-      console.log("Audio is either already played or is currently playing.");
-      return;
-    }
+  // Don't play the audio if it's already played or currently playing
+  if (audioPlayed || isAudioPlaying) {
+    console.log("Audio is either already played or is currently playing.");
+    return;
+  }
 
-    const audio = new Audio("/audio.mp3");
-    
-    // Set the isAudioPlaying to true when the audio starts playing
-    setIsAudioPlaying(true);
-    
-    audio.play()
-      .then(() => {
-        console.log("Audio played successfully.");
-        setAudioPlayed(true); // Set audioPlayed to true after it plays
-      })
-      .catch((error) => {
-        console.error("Error playing audio:", error);
-      })
-      .finally(() => {
-        // Set isAudioPlaying to false when audio finishes playing
-        audio.onended = () => {
-          setIsAudioPlaying(false);
-        };
-      });
+  const audio = new Audio("/audio.mp3");
+
+  // Set the isAudioPlaying to true when the audio starts playing
+  setIsAudioPlaying(true);
+
+  audio.onended = () => {
+    console.log("Welcome audio finished.");
+    setAudioPlayed(true); // Set audioPlayed to true only after audio ends
+    setIsAudioPlaying(false); // Allow further interactions
   };
+
+  audio
+    .play()
+    .catch((error) => {
+      console.error("Error playing audio:", error);
+      setIsAudioPlaying(false); // Reset state on error
+    });
+};
 
   const checkMicrophonePermission = async () => {
     try {
